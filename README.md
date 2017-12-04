@@ -39,7 +39,7 @@ def extract_zip(file, destination)
   end
 end
 
-file_path   = Rails.root.join('public', 'uploads', 'document', 'name','2','upload_zip.zip').to_s
+file_path = Rails.root.join('public', 'uploads', 'document', 'name','2','upload_zip.zip').to_s
 destination_path =  Rails.root.join('public', 'uploads', 'document', 'name','2').to_s
 
 extract_zip(file_path, destination_path)

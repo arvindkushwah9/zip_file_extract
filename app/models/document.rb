@@ -1,7 +1,6 @@
 class Document < ApplicationRecord
 	mount_uploader :name, FileUploader
-	# require 'zip'
-	# after_create :extract_zip_file
+	require 'zip'
 
 	def extract_zip_file
 		extract_zip(self.file_path, self.destination_path)
@@ -18,7 +17,6 @@ class Document < ApplicationRecord
   	rescue Exception => e 
   		puts e
   	end
-
 	end
 
 	def file_path
@@ -40,8 +38,4 @@ class Document < ApplicationRecord
 	def extracted_file_path
     extracted_file_path = Rails.root.join("public", "uploads", "document", "name","#{self.id}","#{self.extracted_file_name}").to_s
   end
-	# def view_xml_file
-	# 	"/uploads/document/name/#{self.id}/#{self.extracted_file_name}"
-	# end
-
 end

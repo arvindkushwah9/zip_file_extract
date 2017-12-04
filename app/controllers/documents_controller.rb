@@ -16,26 +16,6 @@ class DocumentsController < ApplicationController
        @document.extract_zip(@document.file_path, @document.destination_path)  
     end
     redirect_to @document.extracted_file_path.gsub("#{Rails.root.to_s}/public","")
-    # file_path = @document.name.path
-    # Zip::File.open(file_path) do |zip_file|
-    #   # Handle entries one by one
-    #   zip_file.each do |entry|
-    #     # Extract to file/directory/symlink
-    #     puts "Extracting #{entry.name}"
-    #     entry.extract(dest_file)
-
-    #     # Read into memory
-    #     content = entry.get_input_stream.read
-    #   end
-
-    # # Find specific entry
-    # # entry = zip_file.glob('*.xml').first
-    # # puts entry.get_input_stream.read
-
-    # # xml = File.open("myfile.xml")
-    # # data = Hash.from_xml(xml)
-    # end
-
   end
 
   # GET /documents/new
@@ -83,35 +63,6 @@ class DocumentsController < ApplicationController
     respond_to do |format|
       format.html { redirect_to documents_url, notice: 'Document was successfully destroyed.' }
       format.json { head :no_content }
-    end
-  end
-  def file_path
-    file_path = Rails.root.join("public", "uploads", "document", "name","#{@document.id}","#{@document.zip_file_name}").to_s
-  end
-  def destination_path
-    destination_path =  Rails.root.join("public", "uploads", "document", "name","#{@document.id}").to_s
-  end
-  def extracted_file_path
-    extracted_file_path = Rails.root.join("public", "uploads", "document", "name","#{@document.id}","#{@document.extracted_file_name}").to_s
-  end
-  def zip_file_name
-    @document.name.file.filename     
-  end
-  def extracted_file_name
-    extracted_file_name = @document.zip_file_name.split(".zip").first  
-    if @document.zip_file_name.include?(".tar.gz")
-      extracted_file_name = @document.zip_file_name.split(".tar.gz").first     
-    end
-    return extracted_file_name  
-  end
-  def extract_zip(file, destination)
-    FileUtils.mkdir_p(destination)
-
-    Zip::File.open(file) do |zip_file|
-      zip_file.each do |f|
-        fpath = File.join(destination, f.name)
-        zip_file.extract(f, fpath) unless File.exist?(fpath)
-      end
     end
   end
   private
