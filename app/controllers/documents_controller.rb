@@ -12,10 +12,9 @@ class DocumentsController < ApplicationController
   # GET /documents/1.json
   
   def show
-    unless File.file?(@document.extracted_file_path)
-       @document.extract_zip(@document.file_path, @document.destination_path)  
-    end
-    redirect_to @document.extracted_file_path.gsub("#{Rails.root.to_s}/public","")
+    @document.extract_zip(@document.file_path, @document.destination_path) unless File.file?(@document.extracted_file_path) 
+    @files = Dir["#{@document.destination_path}/*"]-["#{@document.file_path}"]
+    @files = @files.sort
   end
 
   # GET /documents/new

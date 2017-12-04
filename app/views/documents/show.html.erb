@@ -1,4 +1,4 @@
-<p id="notice"><%= notice %></p>
+<!-- <p id="notice"><%#= notice %></p>
 
 <p>
   <strong>Name:</strong>
@@ -13,7 +13,36 @@
 <p>
   <strong>Description:</strong>
   <%= @document.description %>
-</p>
+</p> -->
 
-<%= link_to 'Edit', edit_document_path(@document) %> |
-<%= link_to 'Back', documents_path %>
+<%#= link_to 'Edit', edit_document_path(@document) %> |
+<%#= link_to 'Back', documents_path %>
+
+
+<p id="notice"><%= notice %></p>
+
+<h1> All File in Document <%= @document.name.file.filename %></h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% if @files.present? %>
+	    <% @files.each do |file| %>
+	      <tr>
+	        <td><%= doc_file_name({file_url: file}) %></td>
+	        <td><%= link_to 'Show', doc_file_path({file_url: file}) %></td>
+	      </tr>
+	    <% end %>
+    <% else %>
+    	There are no files in the folder
+    <% end %>
+  </tbody>
+</table>
+
+<br>
