@@ -1,6 +1,9 @@
 class DocumentsController < ApplicationController
   require 'zip'
+  require 'open-uri'
   before_action :set_document, only: [:show, :edit, :update, :destroy]
+  OpenURI::Buffer.send :remove_const, 'StringMax'
+OpenURI::Buffer.const_set 'StringMax', 0
 
   # GET /documents
   # GET /documents.json
@@ -12,9 +15,19 @@ class DocumentsController < ApplicationController
   # GET /documents/1.json
   
   def show
-    @document.extract_zip(@document.file_path, @document.destination_path) unless File.file?(@document.extracted_file_path) 
-    @files = Dir["#{@document.destination_path}/*"]-["#{@document.file_path}"]
-    @files = @files.sort
+    begin
+      if @document.name.url.split("/uploads").first.include?("amazonaws.com")
+        byebug      
+        url = URI.parse(@document.name.url)
+        @document.extract_zip(open(url), @document.destination_path)  unless File.file?(@document.extracted_file_path) 
+      else
+        @document.extract_zip(@document.file_path, @document.destination_path) unless File.file?(@document.extracted_file_path) 
+      end
+      @files = Dir["#{@document.destination_path}/*"]-["#{@document.file_path}"]
+      @files = @files.sort
+    rescue Exception => e
+      puts e      
+    end
   end
 
   # GET /documents/new
